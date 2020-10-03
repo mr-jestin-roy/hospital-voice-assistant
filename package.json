@@ -1,0 +1,22 @@
+{
+  "name": "hospital-voice-assistant",
+  "version": "1.0.0",
+  "description": "A voice assistant for hospitals",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fillerInk/hospital-voice-assistant.git"
+  },
+  "author": "Sreeram Venkitesh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fillerInk/hospital-voice-assistant/issues"
+  },
+  "homepage": "https://github.com/fillerInk/hospital-voice-assistant#readme",
+  "devDependencies": {
+    "electron": "^10.1.3"
+  }
+}
