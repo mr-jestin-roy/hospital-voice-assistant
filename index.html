@@ -1,30 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hospital Voice Assistant</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-   
-    <div>Teachable Machine Image Model</div>
-<button type="button" onclick="init()">Start</button>
-<div id="webcam-container"></div>
-<div id="label-container"></div>
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-<script type="text/javascript">
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div style="margin: 30px; display: flex">
+      <div style="float: left; width: 45%; height: auto">
+        <h1>San Joe <br />Hospital</h1>
+        <h5 style="margin-bottom: 5px;">Welcome to the future of hospital appointments!</h5>
+        <h5 style="margin-top: 5px;">
+          Stand as per social distancing norms and put up your hand to start the
+          walkthrough
+        </h5>
+      </div>
+      <div style="float: right; width: 45%; height: auto; margin: 10px">
+        <br />
+        <div id="webcam-container"></div>
+        <div id="banner" style="display: none">INPUT IS A YES LETS ROLL</div>
+        <div id="label-container" style="display: none"></div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
-    // the link to your model provided by Teachable Machine export panel
-    const URL = "./my_model/";
+    <script type="text/javascript">
+      const URL = "./models/";
+      const resultDiv = document.getElementById("banner");
+      let model, webcam, labelContainer, maxPredictions;
 
-    let model, webcam, labelContainer, maxPredictions;
-
-    // Load the image model and setup the webcam
-    async function init() {
+      // Load the image model and setup the webcam
+      async function init() {
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
 
@@ -37,7 +45,7 @@
 
         // Convenience function to setup a webcam
         const flip = true; // whether to flip the webcam
-        webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
+        webcam = new tmImage.Webcam(500, 500, flip); // width, height, flip
         await webcam.setup(); // request access to the webcam
         await webcam.play();
         window.requestAnimationFrame(loop);
@@ -45,27 +53,42 @@
         // append elements to the DOM
         document.getElementById("webcam-container").appendChild(webcam.canvas);
         labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
-            labelContainer.appendChild(document.createElement("div"));
+        for (let i = 0; i < maxPredictions; i++) {
+          // and class labels
+          labelContainer.appendChild(document.createElement("div"));
         }
-    }
+      }
 
-    async function loop() {
+      async function loop() {
         webcam.update(); // update the webcam frame
-        await predict();
+        const action = await predict();
         window.requestAnimationFrame(loop);
-    }
+        if (action == 1) {
+          //action if hand is there
+          resultDiv.style.display = "block";
+        } else {
+          //action is there is no hand
+          resultDiv.style.display = "none";
+        }
+      }
 
-    // run the webcam image through the image model
-    async function predict() {
+      // run the webcam image through the image model
+      async function predict() {
         // predict can take in an image, video or canvas html element
         const prediction = await model.predict(webcam.canvas);
         for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
+          const classPrediction =
+            prediction[i].className +
+            ": " +
+            prediction[i].probability.toFixed(2);
+          labelContainer.childNodes[i].innerHTML = classPrediction;
         }
-    }
-</script>
-</body>
+        // console.log(prediction[1]['probability'])
+        return prediction[1]["probability"];
+      }
+    </script>
+    <script defer>
+      init();
+    </script>
+  </body>
 </html>
