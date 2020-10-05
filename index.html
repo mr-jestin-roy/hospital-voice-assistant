@@ -10,8 +10,10 @@
     <div style="margin: 30px; display: flex">
       <div style="float: left; width: 45%; height: auto">
         <h1>San Joe <br />Hospital</h1>
-        <h5 style="margin-bottom: 5px;">Welcome to the future of hospital appointments!</h5>
-        <h5 style="margin-top: 5px;">
+        <h5 style="margin-bottom: 5px">
+          Welcome to the future of hospital appointments!
+        </h5>
+        <h5 style="margin-top: 5px">
           Stand as per social distancing norms and put up your hand to start the
           walkthrough
         </h5>
@@ -27,6 +29,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
     <script type="text/javascript">
+      const { ipcRenderer: ipc, remote } = require("electron");
+
       const URL = "./models/";
       const resultDiv = document.getElementById("banner");
       let model, webcam, labelContainer, maxPredictions;
@@ -65,10 +69,13 @@
         window.requestAnimationFrame(loop);
         if (action == 1) {
           //action if hand is there
-          resultDiv.style.display = "block";
+          //resultDiv.style.display = "block";
+          ipc.send('enter-home', {
+            type: 'info'
+          });
         } else {
           //action is there is no hand
-          resultDiv.style.display = "none";
+          //resultDiv.style.display = "none";
         }
       }
 

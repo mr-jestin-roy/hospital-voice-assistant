@@ -4,7 +4,8 @@
   "description": "A voice assistant for hospitals",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "nodemon --watch * --exec 'electron .'"
   },
   "repository": {
     "type": "git",

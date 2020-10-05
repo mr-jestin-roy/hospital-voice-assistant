@@ -1,8 +1,9 @@
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, ipcMain: ipc } = require("electron");
 
+let win;
 function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1000,
     height: 800,
     fullscreen: false,
@@ -34,6 +35,12 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
+});
+
+app.on("ready", () => {
+  ipc.on("enter-home", (event, { type }) => {
+    win.loadFile("home.html");
+  });
 });
 
 // In this file you can include the rest of your app's specific main process
