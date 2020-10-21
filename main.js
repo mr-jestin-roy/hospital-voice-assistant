@@ -12,7 +12,7 @@ function createWindow() {
     },
   });
   // and load the index.html of the app.
-  win.loadFile("index.html");
+  win.loadFile("views/index.html");
 }
 
 // This method will be called when Electron has finished
@@ -39,7 +39,7 @@ app.on("activate", () => {
 
 app.on("ready", () => {
   ipc.on("enter-home", (event, { type }) => {
-    win.loadFile("home.html");
+    win.loadFile("views/home.html");
   });
 });
 
