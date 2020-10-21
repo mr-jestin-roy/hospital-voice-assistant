@@ -12,7 +12,7 @@ function createWindow() {
     },
   });
   // and load the index.html of the app.
-  win.loadFile("views/index.html");
+  win.loadFile("views/welcome.html");
 }
 
 // This method will be called when Electron has finished
@@ -38,9 +38,19 @@ app.on("activate", () => {
 });
 
 app.on("ready", () => {
+  
+  ipc.on("normal-mode", (event, { type }) => {
+    win.loadFile("views/index.html");
+  });
+  
+  ipc.on("admin-mode", (event, { type }) => {
+    win.loadFile("views/admin.html");
+  });
+
   ipc.on("enter-home", (event, { type }) => {
     win.loadFile("views/home.html");
   });
+  
 });
 
 // In this file you can include the rest of your app's specific main process
