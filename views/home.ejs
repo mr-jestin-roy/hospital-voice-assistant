@@ -18,7 +18,7 @@
         <div id="webcam-container"></div>
         <div id="banner" style="display: none">INPUT IS A YES LETS ROLL</div>
         <br>
-        <p id="action"></p>
+        <p id="action" style="font-size: larger;"></p>
         <div id="progressbar" class='cp-spinner  cp-round' style="display: none;"></div>
       </div>
     </div>
@@ -32,16 +32,17 @@
       const resultDiv = document.getElementById("banner");
       let model, webcam, labelContainer, maxPredictions;
       const progress = document.getElementById('progressbar')
+      
       function runSpeechRecognition() {
         // get output div reference
+        var output = document.getElementById("output");
         // get action element reference
         var action = document.getElementById("action");
             // new speech recognition object
-            console.log('ivide ethy')
-           /*
             var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
             var recognition = new SpeechRecognition();
         
+            // This runs when the speech recognition service starts
             recognition.onstart = function() {
                 action.innerHTML = "listening, please speak...";
             };
@@ -51,18 +52,16 @@
                 recognition.stop();
             }
           
-            // This runs npmwhen the speech recognition service returns result
+            // This runs when the speech recognition service returns result
             recognition.onresult = function(event) {
-                console.log('theernnu')
-                action.innerHTML = "";
                 var transcript = event.results[0][0].transcript;
                 var confidence = event.results[0][0].confidence;
-                document.activeElement.innerHTML = transcript;
+                console.log(transcript)
+                action.innerHTML = `You said "${transcript}"`;
             };
           
              // start recognition
              recognition.start();
-             */
       }
       
       // Load the image model and setup the webcam
