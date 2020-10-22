@@ -28,7 +28,7 @@
     
     <script type="text/javascript">
 
-      const URL = "../models/";
+      const URL = "./models/";
       const resultDiv = document.getElementById("banner");
       let model, webcam, labelContainer, maxPredictions;
       const progress = document.getElementById('progressbar')
@@ -64,10 +64,6 @@
              recognition.start();
              */
       }
-
-
-      const { ipcRenderer: ipc, remote } = require("electron");
-
       
       // Load the image model and setup the webcam
       async function init() {

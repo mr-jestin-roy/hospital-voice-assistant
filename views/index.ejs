@@ -30,9 +30,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
 
     <script type="text/javascript">
-      const { ipcRenderer: ipc, remote } = require("electron");
 
-      const URL = "../models/";
+      const URL = "./models/";
       const resultDiv = document.getElementById("banner");
       let model, webcam, labelContainer, maxPredictions;
       const progress = document.getElementById('progressbar')
@@ -75,9 +74,7 @@
           //progress.style.width = "100%";
           timeouts.push(setTimeout(() => {
             if (action == 1) {
-              ipc.send("enter-home", {
-                type: "info",
-              });
+             window.location = '/home'
             }
           },3000));
         } else {
