@@ -3,73 +3,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Hospital Voice Assistant</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div style="margin: 30px; display: flex">
       <div style="float: left; width: 45%; height: auto">
-        <h1>Enter your details</h1>
-
-        <input type="text" name="name" id="name" placeholder="Name" style="width: 50%;">
+        <h1>San Joe <br />Hospital</h1>
+        <h5 style="margin-bottom: 5px">
+          Welcome to the future of hospital appointments!
+        </h5>
+        <h5 style="margin-top: 5px">
+          Stand as per social distancing norms and put up your hand to start the
+          walkthrough
+        </h5>
       </div>
       <div style="float: right; width: 45%; height: auto; margin: 10px; text-align:center">
         <br />
         <div id="webcam-container"></div>
         <div id="banner" style="display: none">INPUT IS A YES LETS ROLL</div>
         <br>
-        <p id="action"></p>
         <div id="progressbar" class='cp-spinner  cp-round' style="display: none;"></div>
       </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-    
+
     <script type="text/javascript">
 
-      const URL = "../models/";
+      const URL = "./models/";
       const resultDiv = document.getElementById("banner");
       let model, webcam, labelContainer, maxPredictions;
       const progress = document.getElementById('progressbar')
-      function runSpeechRecognition() {
-        // get output div reference
-        // get action element reference
-        var action = document.getElementById("action");
-            // new speech recognition object
-            console.log('ivide ethy')
-           /*
-            var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-            var recognition = new SpeechRecognition();
-        
-            recognition.onstart = function() {
-                action.innerHTML = "listening, please speak...";
-            };
-            
-            recognition.onspeechend = function() {
-                action.innerHTML = "stopped listening, hope you are done...";
-                recognition.stop();
-            }
-          
-            // This runs npmwhen the speech recognition service returns result
-            recognition.onresult = function(event) {
-                console.log('theernnu')
-                action.innerHTML = "";
-                var transcript = event.results[0][0].transcript;
-                var confidence = event.results[0][0].confidence;
-                document.activeElement.innerHTML = transcript;
-            };
-          
-             // start recognition
-             recognition.start();
-             */
-      }
-
-
-      const { ipcRenderer: ipc, remote } = require("electron");
+      // Load the image model and setup the webcam
 
       
-      // Load the image model and setup the webcam
       async function init() {
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
@@ -108,11 +76,7 @@
           //progress.style.width = "100%";
           timeouts.push(setTimeout(() => {
             if (action == 1) {
-              console.log('Print stuff')
-              runSpeechRecognition();
-              for (var i=0; i<timeouts.length; i++) {
-                clearTimeout(timeouts[i]);
-              }
+             window.location = '/home'
             }
           },3000));
         } else {
