@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const { app, BrowserWindow, ipcMain: ipc } = require("electron");
 //hello testing to pull and push
 let win;
@@ -55,3 +56,36 @@ app.on("ready", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+=======
+const express = require('express')
+
+const app = express()
+
+app.use(express.static(__dirname + '/views'));
+app.set('view engine', 'ejs');
+app.use(express.json());       
+app.use(express.urlencoded()); 
+
+
+app.get('/',(req,res)=>{
+  res.render('welcome')
+})
+
+app.get('/admin',(req,res)=>{
+  res.render('admin')
+})
+
+app.get('/home',(req,res)=>{
+  res.render('home')
+})
+
+app.get('/index',(req,res)=>{
+  res.render('index')
+})
+
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT, ()=>{
+    console.log('Server started')
+})
+>>>>>>> 29c9ea0f866651f29cf100e937c57241986cc01d
