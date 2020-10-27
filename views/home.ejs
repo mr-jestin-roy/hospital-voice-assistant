@@ -8,10 +8,15 @@
   </head>
   <body>
     <div style="margin: 30px; display: flex">
-      <div style="float: left; width: 45%; height: auto">
+      <div style="float: left; width: 45%; height: auto;">
         <h1>Enter your details</h1>
 
         <input type="text" name="name" id="name" placeholder="Name" style="width: 50%;">
+        <input type="text" name="adress" id="address" placeholder="Address" style="width: 50%;">
+        <input type="text" name="phone" id="phone" placeholder="Phone Number" style="width: 50%;"><br><br>
+
+        <button class='outline' style="margin-left:auto; margin-right:auto; width:20%;">Submit</button>
+
       </div>
       <div style="float: right; width: 45%; height: auto; margin: 10px; text-align:center">
         <br />
@@ -31,6 +36,9 @@
       const URL = "./models/";
       let model, webcam, labelContainer, maxPredictions;
       const progress = document.getElementById('progressbar')
+      const name = document.getElementById('name')
+      const address = document.getElementById('address')
+      const phone = document.getElementById('phone')
       
       function runSpeechRecognition() {
         // get output div reference
@@ -57,6 +65,7 @@
                 var confidence = event.results[0][0].confidence;
                 console.log(transcript)
                 action.innerHTML = `You said "${transcript}"`;
+                name.value = transcript
             };
           
              // start recognition
