@@ -47,7 +47,7 @@
       const holder = document.getElementById('holder')
       
       const datum = JSON.parse(holder.innerText);
-      console.log(datum.value);
+      //console.log(datum.value);
     
       let typeStat =  [
       {"label":"bystander", "value":0}, 
@@ -73,9 +73,37 @@
       {"label":"Payipra", "value":0},
       {"label":"Kodanad", "value":0}];
 
+      let timeStat =  [
+      {"label":"0", "value":0},
+      {"label":"1", "value":0},
+      {"label":"2", "value":0},
+      {"label":"3", "value":0},
+      {"label":"4", "value":0},
+      {"label":"5", "value":0},
+      {"label":"6", "value":0},
+      {"label":"7", "value":0},
+      {"label":"8", "value":0},
+      {"label":"9", "value":0}, 
+      {"label":"10", "value":0}, 
+      {"label":"11", "value":0},
+      {"label":"12", "value":0},
+      {"label":"13", "value":0},
+      {"label":"14", "value":0},
+      {"label":"15", "value":0},
+      {"label":"16", "value":0},
+      {"label":"17", "value":0},
+      {"label":"18", "value":0},
+      {"label":"19", "value":0},
+      {"label":"20", "value":0},
+      {"label":"21", "value":0},
+      {"label":"22", "value":0},
+      {"label":"23", "value":0}];
+
+
+
       for(var i=0; i<datum.value.length; i++){
         const person = {};
-        console.log(datum.value[i].type)
+        //console.log(datum.value[i].type)
         for(let j=0;j<7;j++){
           if(typeStat[j].label == datum.value[i].type){
             typeStat[j].value ++;
@@ -85,7 +113,7 @@
 
       for(var i=0; i<datum.value.length; i++){
         const person = {};
-        console.log(datum.value[i].block)
+       // console.log(datum.value[i].block)
         for(let j=0;j<7;j++){
           if(blockStat[j].label == datum.value[i].block){
             blockStat[j].value ++;
@@ -95,7 +123,7 @@
 
       for(var i=0; i<datum.value.length; i++){
         const person = {};
-        console.log(datum.value[i].block)
+        //console.log(datum.value[i].block)
         for(let j=0;j<4;j++){
           if(placeStat[j].label == datum.value[i].address){
             placeStat[j].value ++;
@@ -103,15 +131,32 @@
         }
       }
 
-      console.log(blockStat)
+      for(var i=0; i<datum.value.length; i++){
+        const person = {};
+        //console.log(datum.value[i].block)
+        for(let j=0;j<24;j++){
+          if(timeStat[j].label == datum.value[i].time.split(':')[0]){
+            timeStat[j].value ++;
+          }
+        }
+      }
 
+      console.log(timeStat)
+
+
+      const timeCounts = [];
+      for(let z =0; z<24;z++){
+        timeCounts[z] = timeStat[z].value
+      }
+
+      console.log(timeCounts)
       function mycomparator(a,b) {
         return parseInt(a.value, 10) - parseInt(b.value, 10);
       }
       typeStat.sort(mycomparator);
       blockStat.sort(mycomparator);
 
-      console.log(typeStat)
+      //console.log(typeStat)
 
       function drawPie(id,data){
       
@@ -155,8 +200,8 @@
             .text(function(d, i) { return `${data[i].label} (${data[i].value})`; });      //get the label from our original data array
         } 
 
-        function drawBarChart(){
-          var data = [20,30,40,10,20];
+        function drawBarChart(id,data){
+          //var data = [20,30,40,10,20];
 
           var margin = {
             top: 30,
@@ -166,7 +211,7 @@
           };
 
           var height = 330 - margin.top - margin.bottom;
-          var width = 500 - margin.right - margin.left;
+          var width = 600 - margin.right - margin.left;
           var barWidth = 35;
           var barOffset = 5;
 
@@ -187,7 +232,7 @@
             .domain(d3.range(0,data.length))
             .rangeBands([0,width])
 
-          d3.select("#countvtime").append('svg')
+          d3.select(id).append('svg')
             .attr('width',width + margin.right + margin.left)
             .attr('height',height + margin.top + margin.bottom)
             .append('g')
@@ -249,7 +294,7 @@
             .scale(hScale)
             .orient('bottom')
             .tickValues(hScale.domain().filter(function(d,i){
-              return !(i % (data.length/5)) 
+              return !(i % (data.length/24)) 
             }))
 
           var hGuide = d3.select('svg')
@@ -265,7 +310,7 @@
           
         }
 
-        drawBarChart()
+        drawBarChart("#countvtime",timeCounts);
 
         drawPie("#countvtype",typeStat)
         drawPie("#countvblock",blockStat)
