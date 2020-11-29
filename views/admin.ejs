@@ -12,25 +12,25 @@
         <h1>Welcome to Admin Panel</h1>
 
         <div style="display: flex; border: 2px #333 solid; border-radius:15px; height:60px; padding: 0 10px;">
-          <button class="outline" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Type</button>
-          <button class="outline" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Time</button>
-          <button class="outline" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Type vs Block</button>
-          <button class="outline" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Block</button>
-          <button class="outline" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Address</button>
-          <button class="outline" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Type vs Address</button>
+          <button class="outline" id="countvtypebutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Type</button>
+          <button class="outline" id="countvtimebutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Time</button>
+          <button class="outline" id="typevblockbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Type vs Block</button>
+          <button class="outline" id="countvblockbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Block</button>
+          <button class="outline" id="countvaddressbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Address</button>
+          <button class="outline" id="viewallbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">View all Data</button>
         </div>
         <br>
         <div style="display: flex;">
-          <div id="countvtype" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px;">
+          <div id="countvtype" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
             <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Type</h4>
           </div>
-          <div id="countvblock" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px;">
+          <div id="countvblock" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
             <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Block</h4>
           </div>
-          <div id="countvaddress" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px;">
+          <div id="countvaddress" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
             <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Address</h4>
           </div>
-          <div id="countvtime" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px;">
+          <div id="countvtime" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
             <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Time</h4>
           </div>
        </div>
@@ -45,6 +45,76 @@
 
     <script>
       const holder = document.getElementById('holder')
+
+      const countTypeButton = document.getElementById('countvtypebutton')
+      const countTimeButton = document.getElementById('countvtimebutton')
+      const typeBlockButton = document.getElementById('typevblockbutton')
+      const countBlockButton = document.getElementById('countvblockbutton')
+      const countAddressButton = document.getElementById('countvaddressbutton')
+      const viewAllButton = document.getElementById('viewallbutton')
+
+      const countvtype = document.getElementById('countvtype')
+      const countvblock = document.getElementById('countvblock')
+      const countvaddress = document.getElementById('countvaddress')
+      const countvtime = document.getElementById('countvtime')
+
+      countTypeButton.addEventListener('click',function(){
+        if(countTypeButton.className == "outline"){
+          countTypeButton.className = "";
+          countvtype.style.display = "block"
+        }else if(countTypeButton.className == ""){
+          countTypeButton.className = "outline"
+          countvtype.style.display = "none"
+        }
+        
+      });
+
+      countTimeButton.addEventListener('click',function(){
+        if(countTimeButton.className == "outline"){
+          countTimeButton.className = "";
+          countvtime.style.display = "block"
+        }else if(countTimeButton.className == ""){
+          countTimeButton.className = "outline"
+          countvtime.style.display = "none"
+        }
+      });
+
+      typeBlockButton.addEventListener('click',function(){
+        if(typeBlockButton.className == "outline"){
+          typeBlockButton.className = "";
+        }else if(typeBlockButton.className == ""){
+          typeBlockButton.className = "outline"
+        }
+      });
+
+      countBlockButton.addEventListener('click',function(){
+        if(countBlockButton.className == "outline"){
+          countBlockButton.className = "";
+          countvblock.style.display = 'block';
+        }else if(countBlockButton.className == ""){
+          countBlockButton.className = "outline"
+          countvblock.style.display = 'none';
+        }
+      });
+
+      countAddressButton.addEventListener('click',function(){
+        if(countAddressButton.className == "outline"){
+          countAddressButton.className = "";
+          countvaddress.style.display = 'block';
+        }else if(countAddressButton.className == ""){
+          countAddressButton.className = "outline"
+          countvaddress.style.display = 'none';
+        }
+      });
+
+      viewAllButton.addEventListener('click',function(){
+        if(viewAllButton.className == "outline"){
+          viewAllButton.className = "";
+        }else if(viewAllButton.className == ""){
+          viewAllButton.className = "outline"
+        }
+      });
+
       
       const datum = JSON.parse(holder.innerText);
       //console.log(datum.value);
@@ -258,6 +328,7 @@
             tooltip.html(d)
               .style('left', (d3.event.pageX)+'px')
               .style('top',(d3.event.pageY)+'px')
+              .style('padding',"10px")
             d3.select(this).style('opacity',0.5)
           })
           .on('mouseout', function(d){
