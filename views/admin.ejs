@@ -3,12 +3,389 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Admin</title>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div style="margin: 30px; display: flex">
-        <h1>Welcome, to admin panel</h1>
+    <div style="margin: 30px;">
+        <h1>Welcome to Admin Panel</h1>
+
+        <div style="display: flex; border: 2px #333 solid; border-radius:15px; height:60px; padding: 0 10px;">
+          <button class="outline" id="countvtypebutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Type</button>
+          <button class="outline" id="countvtimebutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Time</button>
+          <button class="outline" id="typevblockbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Type vs Block</button>
+          <button class="outline" id="countvblockbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Block</button>
+          <button class="outline" id="countvaddressbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">Count vs Address</button>
+          <button class="outline" id="viewallbutton" style="border: 2px #333 solid; border-radius:10px; margin:8px 5px; font-size: large;">View all Data</button>
+        </div>
+        <br>
+        <div style="display: flex;">
+          <div id="countvtype" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
+            <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Type</h4>
+          </div>
+          <div id="countvblock" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
+            <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Block</h4>
+          </div>
+          <div id="countvaddress" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
+            <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Address</h4>
+          </div>
+          <div id="countvtime" style="padding: 30px; border:2px #333 solid; width:fit-content; margin:10px; display:none">
+            <h4 style="text-align: center; margin-bottom:15px; margin-top:0;">Count vs Time</h4>
+          </div>
+       </div>
     </div>
+
+  
+    <p id="holder" style="display: none;">
+      <%= data %>
+    </p>
+
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+    <script>
+      const holder = document.getElementById('holder')
+
+      const countTypeButton = document.getElementById('countvtypebutton')
+      const countTimeButton = document.getElementById('countvtimebutton')
+      const typeBlockButton = document.getElementById('typevblockbutton')
+      const countBlockButton = document.getElementById('countvblockbutton')
+      const countAddressButton = document.getElementById('countvaddressbutton')
+      const viewAllButton = document.getElementById('viewallbutton')
+
+      const countvtype = document.getElementById('countvtype')
+      const countvblock = document.getElementById('countvblock')
+      const countvaddress = document.getElementById('countvaddress')
+      const countvtime = document.getElementById('countvtime')
+
+      countTypeButton.addEventListener('click',function(){
+        if(countTypeButton.className == "outline"){
+          countTypeButton.className = "";
+          countvtype.style.display = "block"
+        }else if(countTypeButton.className == ""){
+          countTypeButton.className = "outline"
+          countvtype.style.display = "none"
+        }
+        
+      });
+
+      countTimeButton.addEventListener('click',function(){
+        if(countTimeButton.className == "outline"){
+          countTimeButton.className = "";
+          countvtime.style.display = "block"
+        }else if(countTimeButton.className == ""){
+          countTimeButton.className = "outline"
+          countvtime.style.display = "none"
+        }
+      });
+
+      typeBlockButton.addEventListener('click',function(){
+        if(typeBlockButton.className == "outline"){
+          typeBlockButton.className = "";
+        }else if(typeBlockButton.className == ""){
+          typeBlockButton.className = "outline"
+        }
+      });
+
+      countBlockButton.addEventListener('click',function(){
+        if(countBlockButton.className == "outline"){
+          countBlockButton.className = "";
+          countvblock.style.display = 'block';
+        }else if(countBlockButton.className == ""){
+          countBlockButton.className = "outline"
+          countvblock.style.display = 'none';
+        }
+      });
+
+      countAddressButton.addEventListener('click',function(){
+        if(countAddressButton.className == "outline"){
+          countAddressButton.className = "";
+          countvaddress.style.display = 'block';
+        }else if(countAddressButton.className == ""){
+          countAddressButton.className = "outline"
+          countvaddress.style.display = 'none';
+        }
+      });
+
+      viewAllButton.addEventListener('click',function(){
+        if(viewAllButton.className == "outline"){
+          viewAllButton.className = "";
+        }else if(viewAllButton.className == ""){
+          viewAllButton.className = "outline"
+        }
+      });
+
+      
+      const datum = JSON.parse(holder.innerText);
+      //console.log(datum.value);
+    
+      let typeStat =  [
+      {"label":"bystander", "value":0}, 
+      {"label":"casuality", "value":0}, 
+      {"label":"covidtest", "value":0},
+      {"label":"appointment", "value":0},
+      {"label":"medicalrep", "value":0},
+      {"label":"staff", "value":0},
+      {"label":"others", "value":0}];
+
+      let blockStat =  [
+      {"label":"A", "value":0}, 
+      {"label":"B", "value":0}, 
+      {"label":"C", "value":0},
+      {"label":"D", "value":0},
+      {"label":"E", "value":0},
+      {"label":"F", "value":0},
+      {"label":"G", "value":0}];
+
+      let placeStat =  [
+      {"label":"Perumbavur", "value":0}, 
+      {"label":"Payyannur", "value":0}, 
+      {"label":"Payipra", "value":0},
+      {"label":"Kodanad", "value":0}];
+
+      let timeStat =  [
+      {"label":"0", "value":0},
+      {"label":"1", "value":0},
+      {"label":"2", "value":0},
+      {"label":"3", "value":0},
+      {"label":"4", "value":0},
+      {"label":"5", "value":0},
+      {"label":"6", "value":0},
+      {"label":"7", "value":0},
+      {"label":"8", "value":0},
+      {"label":"9", "value":0}, 
+      {"label":"10", "value":0}, 
+      {"label":"11", "value":0},
+      {"label":"12", "value":0},
+      {"label":"13", "value":0},
+      {"label":"14", "value":0},
+      {"label":"15", "value":0},
+      {"label":"16", "value":0},
+      {"label":"17", "value":0},
+      {"label":"18", "value":0},
+      {"label":"19", "value":0},
+      {"label":"20", "value":0},
+      {"label":"21", "value":0},
+      {"label":"22", "value":0},
+      {"label":"23", "value":0}];
+
+
+
+      for(var i=0; i<datum.value.length; i++){
+        const person = {};
+        //console.log(datum.value[i].type)
+        for(let j=0;j<7;j++){
+          if(typeStat[j].label == datum.value[i].type){
+            typeStat[j].value ++;
+          }
+        }
+      }
+
+      for(var i=0; i<datum.value.length; i++){
+        const person = {};
+       // console.log(datum.value[i].block)
+        for(let j=0;j<7;j++){
+          if(blockStat[j].label == datum.value[i].block){
+            blockStat[j].value ++;
+          }
+        }
+      }
+
+      for(var i=0; i<datum.value.length; i++){
+        const person = {};
+        //console.log(datum.value[i].block)
+        for(let j=0;j<4;j++){
+          if(placeStat[j].label == datum.value[i].address){
+            placeStat[j].value ++;
+          }
+        }
+      }
+
+      for(var i=0; i<datum.value.length; i++){
+        const person = {};
+        //console.log(datum.value[i].block)
+        for(let j=0;j<24;j++){
+          if(timeStat[j].label == datum.value[i].time.split(':')[0]){
+            timeStat[j].value ++;
+          }
+        }
+      }
+
+      console.log(timeStat)
+
+
+      const timeCounts = [];
+      for(let z =0; z<24;z++){
+        timeCounts[z] = timeStat[z].value
+      }
+
+      console.log(timeCounts)
+      function mycomparator(a,b) {
+        return parseInt(a.value, 10) - parseInt(b.value, 10);
+      }
+      typeStat.sort(mycomparator);
+      blockStat.sort(mycomparator);
+
+      //console.log(typeStat)
+
+      function drawPie(id,data){
+      
+        var w = 300,                        //width
+        h = 300,                            //height
+        r = 150,                            //radius
+        color = d3.scale.category20c();
+
+        var vis = d3.select(id)
+        .append("svg:svg")              //create the SVG element inside the <body>
+        .data([data])                   //associate our data with the document
+            .attr("width", w)           //set the width and height of our visualization (these will be attributes of the <svg> tag
+            .attr("height", h)
+        .append("svg:g")                //make a group to hold our pie chart
+            .attr("transform", "translate(" + r + "," + r + ")")    //move the center of the pie chart from 0, 0 to radius, radius
+
+        var arc = d3.svg.arc()              //this will create <path> elements for us using arc data
+            .outerRadius(r);
+
+        var pie = d3.layout.pie()           //this will create arc data for us given a list of values
+            .value(function(d) { return d.value; });    //we must tell it out to access the value of each element in our data array
+
+        var arcs = vis.selectAll("g.slice")     //this selects all <g> elements with class slice (there aren't any yet)
+            .data(pie)                          //associate the generated pie data (an array of arcs, each having startAngle, endAngle and value properties) 
+            .enter()                            //this will create <g> elements for every "extra" data element that should be associated with a selection. The result is creating a <g> for every object in the data array
+                .append("svg:g")                //create a group to hold each slice (we will have a <path> and a <text> element associated with each slice)
+                    .attr("class", "slice");    //allow us to style things in the slices (like text)
+
+        arcs.append("svg:path")
+                .attr("fill", function(d, i) { return color(i); } ) //set the color for each slice to be chosen from the color function defined above
+                .attr("d", arc);                                    //this creates the actual SVG path using the associated data (pie) with the arc drawing function
+
+        arcs.append("svg:text")                                     //add a label to each slice
+                .attr("transform", function(d) {                    //set the label's origin to the center of the arc
+                //we have to make sure to set these before calling arc.centroid
+                d.innerRadius = 0;
+                d.outerRadius = r;
+                return "translate(" + arc.centroid(d) + ")";        //this gives us a pair of coordinates like [50, 50]
+            })
+            .attr("text-anchor", "middle")                          //center the text on it's origin
+            .text(function(d, i) { return `${data[i].label} (${data[i].value})`; });      //get the label from our original data array
+        } 
+
+        function drawBarChart(id,data){
+          //var data = [20,30,40,10,20];
+
+          var margin = {
+            top: 30,
+            right: 30,
+            bottom: 40,
+            left: 50
+          };
+
+          var height = 330 - margin.top - margin.bottom;
+          var width = 600 - margin.right - margin.left;
+          var barWidth = 35;
+          var barOffset = 5;
+
+          var tooltip = d3.select('body').append('div')
+            .style('position','absolute')
+            .style('background','#f4f4f4')
+            .style('padding','5 15px')
+            .style('border','1px #333 solid')
+            .style('border-radius','5px')
+            .style('opacity',0)
+
+
+          var yScale = d3.scale.linear()
+            .domain([0, d3.max(data)])
+            .range([0, height])
+
+          var xScale = d3.scale.ordinal()
+            .domain(d3.range(0,data.length))
+            .rangeBands([0,width])
+
+          d3.select(id).append('svg')
+            .attr('width',width + margin.right + margin.left)
+            .attr('height',height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform','translate('+margin.left+','+margin.top+')')
+            .style('background','#f4f4f4')
+            .selectAll('rect')
+              .data(data)
+              .enter().append('rect')
+                .style('fill','orange')
+                .attr('width',xScale.rangeBand())
+                .attr('height',function(d){
+                  return yScale(d);
+                })
+                .attr('x', function(d,i){
+                  return xScale(i);
+                })
+                .attr('y',function(d){
+                  return height - yScale(d);
+                })
+          .on('mouseover',function(d){
+            tooltip.transition()
+              .style('opacity',1)
+            tooltip.html(d)
+              .style('left', (d3.event.pageX)+'px')
+              .style('top',(d3.event.pageY)+'px')
+              .style('padding',"10px")
+            d3.select(this).style('opacity',0.5)
+          })
+          .on('mouseout', function(d){
+            tooltip.transition()
+              .style('opacity',0)
+              d3.select(this).style('opacity',1)
+          })
+
+          var vScale = d3.scale.linear()
+            .domain([0, d3.max(data)])
+            .range([height, 0])
+
+          var hScale = d3.scale.ordinal()
+            .domain(d3.range(0,data.length))
+            .rangeBands([0,width])
+
+          var vAxis = d3.svg.axis()
+            .scale(vScale)
+            .orient('left')
+            .ticks(10)
+            .tickPadding(5)
+
+          var vGuide = d3.select('svg')
+            .append('g')
+              vAxis(vGuide)
+              vGuide.attr('transform','translate('+margin.left+','+margin.top+')')
+              vGuide.selectAll('path')
+                .style('fill','none')
+                .style('stroke','#000')
+              vGuide.selectAll('line')
+                .style('stroke','#000')
+
+          var hAxis = d3.svg.axis()
+            .scale(hScale)
+            .orient('bottom')
+            .tickValues(hScale.domain().filter(function(d,i){
+              return !(i % (data.length/24)) 
+            }))
+
+          var hGuide = d3.select('svg')
+            .append('g')
+              hAxis(hGuide)
+              hGuide.attr('transform','translate('+margin.left+','+(height + margin.top)+')')
+              hGuide.selectAll('path')
+                .style('fill','none')
+                .style('stroke','#000')
+              hGuide.selectAll('line')
+                .style('stroke','#000')
+        
+          
+        }
+
+        drawBarChart("#countvtime",timeCounts);
+
+        drawPie("#countvtype",typeStat)
+        drawPie("#countvblock",blockStat)
+        drawPie("#countvaddress",placeStat)
+    </script>
   </body>
 </html>
