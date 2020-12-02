@@ -26,6 +26,7 @@
           <input type="text" name="room" id="room" placeholder="Room No. (give 0 if not applicable)" style="width: 50%; margin: 5px 0;">
           <label>Type of visitor</label>
           <select name="type" id="type" style="width: 55%; margin: 5px 0;">
+            <option value="" selected disabled>Choose Type</option>
             <option value="bystander">Bystander</option>
             <option value="casuality">Casuality</option>
             <option value="covidtest">Covid Test</option>
@@ -43,15 +44,21 @@
 
       </div>
 
-      <div style="float: right; width: 45%; height: auto; margin: 10px; text-align:center">
+      <div style="float: right; width: 45%; height: auto; margin: 10px; text-align:left">
         <br />
-        <div id="webcam-container"></div>
-       
-        <br>
-        <p id="action" style="font-size: x-large;"></p>
-        <div id="progressbar" class='cp-spinner  cp-round' style="display: none;"></div>
+        <h1 id="listeningTo">Enter your Name</h1>
+        <h3 id="result" style="display: none;"> Did you say </h3>
+        <h3 id="confirmation" style="display: none;">Do you want to go again? <br> Say Yes or No </h3>
+        <h3 id="countdown"> Starting to listen in 5 seconds ...</h3>
+
+        <div style="display: none;">
+          <button class="outline" style="margin:5px;  font-size:x-large;">Yes</button>
+          <button class="outline"style="margin: 5px; font-size:x-large;">No</button>
+        </div>
       </div>
     </div>
+
+   
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
@@ -62,6 +69,11 @@
       const name = document.getElementById('name')
       const address = document.getElementById('address')
       const phone = document.getElementById('phone')
+
+      const result = document.getElementById('result')
+      const countdown = document.getElementById('countdown')
+      const confirmation = document.getElementById('confirmation')
+      const listeningTo = document.getElementById('listeningTo')
 
       const time = document.getElementById('time')
       var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -77,43 +89,101 @@
       }
 
       timeNow(time)
-      /*
-      const URL = "./models/";
-      let model, webcam, labelContainer, maxPredictions;
-      const progress = document.getElementById('progressbar')
+
       
-      
-      function runSpeechRecognition() {
-        // get output div reference
-        var output = document.getElementById("output");
-        // get action element reference
-        var action = document.getElementById("action");
-            // new speech recognition object
-            var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
-            var recognition = new SpeechRecognition();
-        
-            // This runs when the speech recognition service starts
-            recognition.onstart = function() {
-                action.innerHTML = "listening, please speak...";
-            };
+
+      var timeouts = []
+
+      var secs = 5;
+      var x = setInterval(function() {
+        secs--;
+        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+        if (secs < 0) {
+          clearInterval(x);
+          countdown.innerText = "";
+          fillForm();
+        }
+      }, 1000);
+
+
+      async function fillForm(){
+
+        function runSpeechRecognition(field) {
+          // get output div reference
+          console.log(`Field is ${field}`);
+          var output = document.getElementById("output");
+          // get action element reference
+          var action = document.getElementById("action");
+              // new speech recognition object
+              var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+              var recognition = new SpeechRecognition();
+          
+              // This runs when the speech recognition service starts
+              recognition.onstart = function() {
+                
+              };
+              
+              recognition.onspeechend = function() {
+                  recognition.stop();
+              }
             
-            recognition.onspeechend = function() {
-                action.innerHTML = "stopped listening, hope you are done...";
-                recognition.stop();
-            }
-          
-            // This runs when the speech recognition service returns result
-            recognition.onresult = function(event) {
-                var transcript = event.results[0][0].transcript;
-                var confidence = event.results[0][0].confidence;
-                console.log(transcript)
-                action.innerHTML = `You said "${transcript}"`;
-                name.value = transcript
-            };
-          
-             // start recognition
-             recognition.start();
+              // This runs when the speech recognition service returns result
+              recognition.onresult = function(event) {
+                  var transcript = event.results[0][0].transcript;
+                  var confidence = event.results[0][0].confidence;
+                  console.log(transcript)
+                  result.innerText = `Did you say ${transcript}`
+                  result.style.display = "block";
+                  countdown.style.display = "none";
+                  confirmation.style.display = "block";
+                  if(field == 'name'){
+                    name.value = transcript;
+                    countdown.style.display = "block";
+                    var secs = 5;
+                    var x = setInterval(function() {
+                      secs--;
+                      countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                      if (secs < 0) {
+                        clearInterval(x);
+                        countdown.innerText = "";
+                        runSpeechRecognition('nameAgain')
+                      }
+                    }, 1000);
+                  }
+                  else if(field == 'nameAgain'){
+                    if(transcript == 'yes'){
+                      runSpeechRecognition('name')
+                    }
+                    else{
+                      listeningTo.innerText = "Enter your Address"
+                      runSpeechRecognition('address')
+                    }
+                  }
+                  else if(field == 'address'){
+                    console.log('Ivide ethyyy')
+                  }
+                  
+              };
+            
+               // start recognition
+               recognition.start();
+        }
+      
+        console.log('Print stuff')
+        countdown.innerText = "Listening now"
+        const nameRecognition = runSpeechRecognition('name');
+
+
+      
+
       }
+
+      
+      
+      
+      
       
       // Load the image model and setup the webcam
       async function init() {
@@ -142,7 +212,6 @@
           //labelContainer.appendChild(document.createElement("div"));
         //}
       }
-      var timeouts = []
       async function loop() {
         webcam.update(); // update the webcam frame
         const action = await predict();
@@ -185,7 +254,7 @@
         // console.log(prediction[1]['probability'])
         return prediction[1]["probability"];
       }
-      */
+      
     </script>
 
     
