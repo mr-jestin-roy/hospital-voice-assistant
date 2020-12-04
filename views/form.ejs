@@ -39,7 +39,7 @@
           <input type="text" name="time" id="time" placeholder="Check in time" style="width: 50%; margin: 5px 0;">
 
           <br><br>
-          <button class='outline' style="margin-left:auto; margin-right:auto; width:20%;" type="submit">Submit</button>
+          <button id='submitButton' class='outline' style="margin-left:auto; margin-right:auto; width:20%;" type="submit">Submit</button>
         </form>
 
       </div>
@@ -47,6 +47,7 @@
       <div style="float: right; width: 45%; height: auto; margin: 10px; text-align:left">
         <br />
         <h1 id="listeningTo">Enter your Name</h1>
+        <h3 id="typeListing" style="display: none;">Bystander/ Casuality/ Covid Test/ Doctor's Appointment/ Medical Rep/ Staff/ Others</h3>
         <h3 id="result" style="display: none;"> Did you say </h3>
         <h3 id="confirmation" style="display: none;">Do you want to go again? <br> Say Yes or No </h3>
         <h3 id="countdown"> Starting to listen in 5 seconds ...</h3>
@@ -69,11 +70,16 @@
       const name = document.getElementById('name')
       const address = document.getElementById('address')
       const phone = document.getElementById('phone')
+      const block = document.getElementById('block')
+      const roomno = document.getElementById('room')
+      const type = document.getElementById('type')
+      const submitButton = document.getElementById('submitButton')
 
       const result = document.getElementById('result')
       const countdown = document.getElementById('countdown')
       const confirmation = document.getElementById('confirmation')
       const listeningTo = document.getElementById('listeningTo')
+      const typeListing = document.getElementById('typeListing')
 
       const time = document.getElementById('time')
       var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -107,7 +113,7 @@
       }, 1000);
 
 
-      async function fillForm(){
+      function fillForm(){
 
         function runSpeechRecognition(field) {
           // get output div reference
@@ -133,12 +139,15 @@
                   var transcript = event.results[0][0].transcript;
                   var confidence = event.results[0][0].confidence;
                   console.log(transcript)
-                  result.innerText = `Did you say ${transcript}`
+                  result.innerText = `You said ${transcript}`
                   result.style.display = "block";
-                  countdown.style.display = "none";
+                  
+                  countdown.style.display = "block";
                   confirmation.style.display = "block";
+                  
                   if(field == 'name'){
                     name.value = transcript;
+                    
                     countdown.style.display = "block";
                     var secs = 5;
                     var x = setInterval(function() {
@@ -147,22 +156,304 @@
 
                       if (secs < 0) {
                         clearInterval(x);
-                        countdown.innerText = "";
+                        countdown.innerText = "Listening for confirmation";
                         runSpeechRecognition('nameAgain')
                       }
                     }, 1000);
                   }
                   else if(field == 'nameAgain'){
+                    listeningTo.innerText = "Enter your name again"
+                    result.style.display = "none";
+                    confirmation.style.display = "none";
+                    countdown.innerText = "";
+                    countdown.style.display = "block";
                     if(transcript == 'yes'){
-                      runSpeechRecognition('name')
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('name')
+                        }
+                      }, 1000);
                     }
-                    else{
+                    else if(transcript== 'no'){
                       listeningTo.innerText = "Enter your Address"
-                      runSpeechRecognition('address')
+
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('address')
+                        }
+                      }, 1000);
                     }
                   }
                   else if(field == 'address'){
-                    console.log('Ivide ethyyy')
+                    address.value = transcript;
+                    
+                    var secs = 5;
+                    var x = setInterval(function() {
+                      secs--;
+                      countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                      if (secs < 0) {
+                        clearInterval(x);
+                        countdown.innerText = "Listening for confirmation";
+                        runSpeechRecognition('addressAgain')
+                      }
+                    }, 1000);
+                  }
+                  else if(field == 'addressAgain'){
+                    listeningTo.innerText = "Enter your address again"
+                    result.style.display = "none";
+                    confirmation.style.display = "none";
+                    countdown.style.display = "block";
+                    if(transcript == 'yes'){
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('address')
+                        }
+                      }, 1000);
+                    }
+                    else if(transcript== 'no'){
+                      listeningTo.innerText = "Enter your phone number"
+
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('phone')
+                        }
+                      }, 1000);
+                    }
+                  }
+                  else if(field == 'phone'){
+                    phone.value = transcript;
+                    
+                    var secs = 5;
+                    var x = setInterval(function() {
+                      secs--;
+                      countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                      if (secs < 0) {
+                        clearInterval(x);
+                        countdown.innerText = "Listening for confirmation";
+                        runSpeechRecognition('phoneAgain')
+                      }
+                    }, 1000);
+                  }
+                  else if(field == 'phoneAgain'){
+                    listeningTo.innerText = "Enter your phone number again"
+                    result.style.display = "none";
+                    confirmation.style.display = "none";
+                    countdown.style.display = "block";
+                    if(transcript == 'yes'){
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('phone')
+                        }
+                      }, 1000);
+                    }
+                    else if(transcript== 'no'){
+                      listeningTo.innerText = "Enter your Block"
+
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('block')
+                        }
+                      }, 1000);
+                    }
+                  }
+                  else if(field == 'block'){
+                    block.value = transcript;
+                    
+                    var secs = 5;
+                    var x = setInterval(function() {
+                      secs--;
+                      countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                      if (secs < 0) {
+                        clearInterval(x);
+                        countdown.innerText = "Listening for confirmation";
+                        runSpeechRecognition('blockAgain')
+                      }
+                    }, 1000);
+                  }
+                  else if(field == 'blockAgain'){
+                    listeningTo.innerText = "Enter your block again"
+                    result.style.display = "none";
+                    confirmation.style.display = "none";
+                    countdown.style.display = "block";
+                    if(transcript == 'yes'){
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('block')
+                        }
+                      }, 1000);
+                    }
+                    else if(transcript== 'no'){
+                      listeningTo.innerText = "Enter your room number"
+
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('roomno')
+                        }
+                      }, 1000);
+                    }
+                  }else if(field == 'roomno'){
+                    roomno.value = transcript;
+                    
+                    var secs = 5;
+                    var x = setInterval(function() {
+                      secs--;
+                      countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                      if (secs < 0) {
+                        clearInterval(x);
+                        countdown.innerText = "Listening for confirmation";
+                        runSpeechRecognition('roomnoAgain')
+                      }
+                    }, 1000);
+                  }
+                  else if(field == 'roomnoAgain'){
+                    listeningTo.innerText = "Enter your room number again"
+                    result.style.display = "none";
+                    confirmation.style.display = "none";
+                    countdown.style.display = "block";
+                    if(transcript == 'yes'){
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('roomno')
+                        }
+                      }, 1000);
+                    }
+                    else if(transcript== 'no'){
+                      listeningTo.innerText = `Enter your type`
+                      typeListing.style.display = 'block';
+                      var secs = 15;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('type')
+                        }
+                      }, 1000);
+                    }  
+                  }else if(field == 'type'){
+
+                    if(transcript == 'bystander')
+                      type.selectedIndex = '1';
+                    else if(transcript == 'casuality')
+                      type.selectedIndex = '2';
+                    else if(transcript == 'covid test')
+                      type.selectedIndex = '3';
+                    else if(transcript == 'doctor\'s appointment')
+                      type.selectedIndex = '4';
+                    else if(transcript == 'medical rep')
+                      type.selectedIndex = '5';  
+                    else if(transcript == 'staff')
+                      type.selectedIndex = '6';
+                    else if(transcript == 'others')
+                      type.selectedIndex = '7';
+                    
+                    var secs = 5;
+                    var x = setInterval(function() {
+                      secs--;
+                      countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                      if (secs < 0) {
+                        clearInterval(x);
+                        countdown.innerText = "Listening for confirmation";
+                        runSpeechRecognition('typeAgain')
+                      }
+                    }, 1000);
+                  }
+                  else if(field=='typeAgain'){
+                    listeningTo.innerText = "Enter your type again"
+                    result.style.display = "none";
+                    confirmation.style.display = "none";
+                    countdown.style.display = "block";
+                    if(transcript == 'yes'){
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Starting to listen in ${secs} seconds ... `;    
+
+                        if (secs < 0) {
+                          clearInterval(x);
+                          countdown.innerText = "Listening now";
+                          runSpeechRecognition('type')
+                        }
+                      }, 1000);
+                    }
+                    else if(transcript== 'no'){
+                      typeListing.style.display = 'none';
+                      listeningTo.innerText = "Thank you for your time, submitting form now..."
+
+                      var secs = 5;
+                      var x = setInterval(function() {
+                        secs--;
+                        countdown.innerText =  `Submitting in ${secs} seconds ... `;    
+
+                        if (secs == 0) {
+                          clearInterval(x);
+                          submitButton.click();
+                          
+                        }
+                      }, 1000);
+                    }  
+                    
                   }
                   
               };
