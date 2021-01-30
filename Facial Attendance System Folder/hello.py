@@ -1,7 +1,6 @@
 import streamlit as st
 # To make things easier later, we're also importing numpy and pandas for
 # working with sample data.
-import numpy as np
 
 from datetime import datetime
 import pandas as pd
@@ -27,17 +26,17 @@ def main():
         """
     st.markdown(html_temp, unsafe_allow_html=True)
     st.image('mllogo.jpeg', width=700)
-    oxygen = st.text_input("Name","Type Here")
+    name = st.text_input("Admin's Name","Type Here")
     st.file_uploader('File uploader')
     now = datetime.now()
     dtString = now.strftime('%d:%B:%Y:%H:%M:%S')
-    print(dtString)
+
 
 
     if st.button("Start"):
-
         st.success('Attendance is marked in Attendance.csv')
         df = pd.read_csv("Attendance.csv")  # read a CSV file
+        st.write("Updated at ",dtString," by ",name)
         st.markdown(safe_html,unsafe_allow_html=True)
         st.write(df)
 
