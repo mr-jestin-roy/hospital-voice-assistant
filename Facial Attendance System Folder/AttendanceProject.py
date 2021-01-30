@@ -39,9 +39,9 @@ def markAttendance(name):
         if name not in nameList:
             f.writelines(f'\n{name},{dtString}')
 
-        
 
-	
+
+
 
 
 
